@@ -1,3 +1,5 @@
+#!python3
+
 """Notifihub Authenticate
 
 Manage athentication details for given connector. Beware that resulting
