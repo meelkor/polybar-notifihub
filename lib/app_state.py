@@ -14,6 +14,10 @@ class AppState:
         return (conn for conn in self._connections.values())
 
 
+    @property
+    def focused_connection(self):
+        return self._focused_connection
+
     def get_snapshot(self, conn_id: str) -> NotificationSnapshot:
         return self._snapshots[conn_id] if conn_id in self._snapshots else None
 

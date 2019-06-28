@@ -12,6 +12,7 @@ from os import getpid
 from lib.config import load_config, list_auths
 from lib.manager import make_connection
 from lib.app_state import AppState
+from lib.renderer import render
 
 app = AppState()
 
@@ -57,56 +58,37 @@ def update(conn_id):
 
     app.update_snapshot(conn_id, snapshot)
 
-    render()
-
-
-def render():
-    out_buffer = ''
-
-    for conn in app.connections:
-        out_buffer += conn.icon
-
-        snapshot = app.get_snapshot(conn.id)
-
-        if snapshot and not snapshot.empty:
-            out_buffer += '!'
-
-        out_buffer += ','
-
-    preview = app.get_preview()
-
-    if preview:
-        out_buffer += ' | ' + preview.title
-
-    print(out_buffer)
+    render(app)
 
 
 def on_next_notification(*args):
     app.focus_notification(step=1)
-    render()
+    render(app)
 
 
 def on_prev_notification(*args):
     app.focus_notification(step=-1)
-    render()
+    render(app)
 
 
 def on_next_connection(*args):
     app.focus_connection(step=1)
-    render()
+    render(app)
 
 
 def on_prev_connection(*args):
     app.focus_connection(step=-1)
-    render()
+    render(app)
 
 
 def on_mark_as_read(*args):
     notif = app.get_preview()
-    conn = app.get_connection(notif.connection)
 
-    conn.dismiss(notif.id)
-    update(conn.id)
+    if notif:
+        conn = app.get_connection(notif.connection)
+
+        conn.dismiss(notif.id)
+        update(conn.id)
 
 
 def write_process_number():
