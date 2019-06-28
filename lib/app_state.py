@@ -33,11 +33,11 @@ class AppState:
     def update_snapshot(self, conn_id: str, snap: NotificationSnapshot):
         self._snapshots[conn_id] = snap
 
-        if not self._focused_notification and not snap.empty:
+        if not self._focused_connection and not snap.empty:
             self._focused_connection = conn_id
             self._focused_notification = 0
 
-        elif self._focused_notification == conn_id:
+        elif self._focused_connection == conn_id:
             if snap.empty:
                 snapshots = self._snapshots.items()
                 id = next((id for (id, s) in snapshots if not s.empty), None)
